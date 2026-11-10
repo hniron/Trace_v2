@@ -49,12 +49,14 @@ v2 相比 v1 的关键改进：通过 marker kernel + 层 forward hook 机制，
 
 | 文件 | 层类型 | 覆盖的访存行为 |
 |---|---|---|
-| token0_layer00.csv | GDN 层（线性注意力） | conv_state/ssm_state 递推状态流式访问 |
+| token0_layer00.csv.gz | GDN 层（线性注意力） | conv_state/ssm_state 递推状态流式访问 |
 | token0_layer03.csv | 全注意力层 | KV cache 分页访问 + QKV 权重 |
-| token1_layer00.csv | GDN 层 | 同上 |
+| token1_layer00.csv.gz | GDN 层 | 同上 |
 | token1_layer07.csv | 全注意力层 | 同上（layer03 超 100MB，用 layer07 代替） |
-| token2_layer00.csv | GDN 层 | 同上 |
+| token2_layer00.csv.gz | GDN 层 | 同上 |
 | token2_layer03.csv | 全注意力层 | 同上 |
+
+> `.csv.gz` 为 gzip 压缩（原 CSV 超过 GitHub API 上传限制），用 `gunzip` 解压即可得到 CSV。
 
 样本文件的列格式（CSV）：
 
