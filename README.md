@@ -79,3 +79,23 @@ grid_launch_id,cta_id_x,warp_id,opcode,rw,addr,size,layer_id
 ## 五、完整数据获取
 
 145 个完整拆分文件（9.8GB）及原始 trace 因体积超 GitHub 限制未上传，保存在本地 `/home/workstation1/nvbit_trace_v2/`。
+
+### token1 全量 48 层数据（本仓库 `token1/` 目录）
+
+token1 的 48 层完整访存数据已上传（gzip 压缩，共 340MB）。其中 layer47 因压缩后仍超 100MB，被拆成 4 个分片。
+
+**解压方法**：
+
+```bash
+# 普通层（直接 gunzip）
+gunzip token1_layer00.csv.gz
+
+# layer47（先合并分片，再解压）
+cat token1_layer47.csv.gz.00.part \
+    token1_layer47.csv.gz.01.part \
+    token1_layer47.csv.gz.02.part \
+    token1_layer47.csv.gz.03.part > token1_layer47.csv.gz
+gunzip token1_layer47.csv.gz
+```
+
+文件列格式：`grid_launch_id,cta_id_x,warp_id,opcode,rw,addr,size,layer_id`（见 3.2 节）。
