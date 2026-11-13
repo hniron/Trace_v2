@@ -98,8 +98,8 @@ def main():
     ymax = span / 1e9
     off = offset.astype(np.float64) / 1e9
 
-    nb_x = len(grids)
-    nb_y = 300  # 像素放大：纵轴分 300 桶（每桶约 300MB）
+    nb_x = 600   # 像素放大：横轴 2929 kernel 合并到 600 桶
+    nb_y = 80    # 像素放大：纵轴 91.7GB 分 80 桶（每桶约 1.1GB）
 
     def hist2d(cls_label):
         mcls = gcls == cls_label
@@ -123,11 +123,19 @@ def main():
 
     fig, ax = plt.subplots(figsize=(18, 9))
     ax.imshow(np.transpose(img, (1, 0, 2)), origin="lower", aspect="auto",
-              extent=[0, nb_x, 0, ymax])
-    ax.set_xlabel("Kernel 序号（时间顺序）", fontsize=12)
-    ax.set_ylabel("地址偏移（GB，基址 0x%x）" % BASE, fontsize=11)
+              extent=[0, len(grids), 0, ymax], interpolation="nearest")
+    ax.set_xlabel("Kernel 序号（时间顺序）", fontsize=13)
+    ax.set_ylabel("地址偏移（GB，基址 0x%x）" % BASE, fontsize=12)
     ax.set_title("Token1 访存热度图（RGB 分色：红=MoE, 绿=attention/KV, 蓝=其他）",
                  fontsize=14)
+
+    # 黑背景下坐标轴用白色
+    ax.tick_params(colors="white", labelsize=10)
+    for spine in ax.spines.values():
+        spine.set_color("white")
+    ax.xaxis.label.set_color("white")
+    ax.yaxis.label.set_color("white")
+    ax.title.set_color("white")
 
     # layer 边界
     layer_starts = {}
