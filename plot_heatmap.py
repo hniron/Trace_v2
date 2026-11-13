@@ -9,12 +9,17 @@ import numpy as np
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-from matplotlib.colors import LogNorm
+from matplotlib.colors import LogNorm, LinearSegmentedColormap
 from collections import Counter
 
 plt.rcParams["font.sans-serif"] = ["Noto Sans CJK SC", "WenQuanYi Micro Hei",
                                    "DejaVu Sans"]
 plt.rcParams["axes.unicode_minus"] = False
+
+# 自定义配色：浅色底（白）→ 深色高（深红），增强对比度
+CMAP = LinearSegmentedColormap.from_list(
+    "white_to_darkred",
+    ["#ffffff", "#fde0dd", "#f4a582", "#d6604d", "#b2182b", "#67001f"])
 
 REC_DTYPE = np.dtype([
     ('grid', '<u8'), ('cta', '<u4'), ('warp', '<u2'), ('opcode', '<u2'),
@@ -77,12 +82,13 @@ def main():
     fig, ax = plt.subplots(figsize=(16, 9))
     Ht = H.T + 1
     im = ax.imshow(Ht, origin="lower", aspect="auto",
-                   extent=[0, nb_x, 0, ymax], cmap="inferno",
+                   extent=[0, nb_x, 0, ymax], cmap=CMAP,
                    norm=LogNorm(vmin=1, vmax=Ht.max()))
     ax.set_xlabel("Kernel 序号（时间顺序）", fontsize=12)
     ax.set_ylabel("地址偏移（GB，基址 0x%x）" % BASE, fontsize=11)
     ax.set_title("Token1 访存热度图（x=Kernel 顺序, y=地址, 亮度=访存频率）",
                  fontsize=14)
+    ax.set_facecolor("#ffffff")
     cbar = fig.colorbar(im, ax=ax)
     cbar.set_label("访存记录数（log 尺度）", fontsize=11)
 
